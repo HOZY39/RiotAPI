@@ -4,7 +4,7 @@ import requests
 import json
 import urllib.parse
 
-key='RiotAPIkey'
+key='RGAPI-a26cbf38-24c7-42d0-b677-ce625778dc09'
 
 def jprint(obj):
     text = json.dumps(obj, sort_keys=True, indent=4)
@@ -51,6 +51,10 @@ def RankInfo(id):
         a = RankInfo.json()[0]
         if a['queueType'] != 'RANKED_SOLO_5x5':
             a = RankInfo.json()[1]
+            if a['queueType'] != 'RANKED_SOLO_5x5':
+                a = RankInfo.json()[2]
+                if a['queueType'] != 'RANKED_SOLO_5x5':
+                    return "brak"
         return a
     except IndexError as e:
         return "UNKNOWN"
@@ -87,7 +91,9 @@ def MatchData(matchid):
 
 ####################             Match timeline            ###############################
 def MatchTimeLine(matchid):
-    try: timeline = requests.get('https://europe.api.riotgames.com/lol/match/v5/matches/'+matchid+'/timeline?api_key='+key)
+    try:
+        timeline = requests.get('https://europe.api.riotgames.com/lol/match/v5/matches/'+matchid+'/timeline?api_key='+key)
+        test = timeline.json()['info']
     except:
         time.sleep(121)
         timeline = requests.get('https://europe.api.riotgames.com/lol/match/v5/matches/' + matchid + '/timeline?api_key=' + key)

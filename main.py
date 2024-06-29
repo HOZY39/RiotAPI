@@ -18,10 +18,10 @@ def PrintPlayersInGame(name, tag):
     for i in range(5):
         print(CurrentGame.participants[i]['summonerName'], '    ',CurrentGame.participants[i+5]['summonerName'])
 
-with open('dragontail-14.3.1/14.3.1/data/en_US/item.json') as plik:
+with open('dragontail-14.13.1/14.13.1/data/en_US/item.json') as plik:
     DaneItem = json.load(plik)
 
-with open('dragontail-14.3.1/14.3.1/data/en_US/runesReforged.json') as plik:
+with open('dragontail-14.13.1/14.13.1/data/en_US/runesReforged.json') as plik:
     DaneRunes = json.load(plik)
 
 def ItemsTimeLine(matchid):
@@ -75,9 +75,11 @@ def AddChampBuildToDB(matchid):
     except: pass
 
     #Get match data from match id
+    print(matchid)
     RawMatchData = MatchData(matchid)['info']
     try: GameData = GameStatistics(**RawMatchData)
     except TypeError as e:
+        print(e)
         return
     #FixedPatch = ".".join(patch[:2])
     #print(".".join(gra["info"]["gameVersion"].split(".")[:2]))
@@ -101,38 +103,45 @@ def AddChampBuildToDB(matchid):
         try:
             Account = AccountInfoPuuId(Player.puuid)
             Rank = RankInfo(Player.id)
-            #print(Rank['tier'])
-            MyCursor.execute(SQLAddUpdatePlayers,
-                             {'puuid': Player.puuid, 'name': Player.name, 'accountId': Player.accountId,
-                              'id': Player.id, 'tag': Account['tagLine'], 'level': Player.summonerLevel,
-                              'profile_icon': Player.profileIconId,
-                              'rankSolo': Rank['rank'], 'tierSolo': Rank['tier'], 'lpSolo': Rank['leaguePoints'],
-                              'winSolo': Rank['wins'],
-                              'loseSolo': Rank['losses']})
-            mydb.commit()
+            if Rank=="brak":
+                MyCursor.execute(SQLAddUpdatePlayers,
+                                 {'puuid': Player.puuid, 'name': Account['gameName'], 'accountId': Player.accountId,
+                                  'id': Player.id, 'tag': Account['tagLine'], 'level': Player.summonerLevel,
+                                  'profile_icon': Player.profileIconId,
+                                  'rankSolo': 'unknown', 'tierSolo': 'unknown', 'lpSolo': 0,
+                                  'winSolo': 0,
+                                  'loseSolo': 0})
+                mydb.commit()
+            else:
+                #print(Rank['tier'])
+                MyCursor.execute(SQLAddUpdatePlayers,
+                                 {'puuid': Player.puuid, 'name': Account['gameName'], 'accountId': Player.accountId,
+                                  'id': Player.id, 'tag': Account['tagLine'], 'level': Player.summonerLevel,
+                                  'profile_icon': Player.profileIconId,
+                                  'rankSolo': Rank['rank'], 'tierSolo': Rank['tier'], 'lpSolo': Rank['leaguePoints'],
+                                  'winSolo': Rank['wins'],
+                                  'loseSolo': Rank['losses']})
+                mydb.commit()
         except Exception as e:
-            print(e+"HALOO")
+            print(e, "HALOOOO")
             return
 
         try:
             ItemsHistory, ItemsTimeStamps = ItemsTimeLine(matchid)
 
+            print("TEST", i)
             ItemsName = ['item' + str(k) for k in range(60)]
             for l in range(60-len(ItemsHistory)):
                 ItemsHistory.append(0)
 
+            print("TEST", i)
             TimeStampsName = ['item' + str(k) + 'TimeStamp' for k in range(60)]
             for l in range(60-len(ItemsTimeStamps)):
                 ItemsTimeStamps.append(0)
             ItemsDict = dict(zip(ItemsName, ItemsHistory))
             TimeStampDict = dict(zip(TimeStampsName, ItemsTimeStamps))
             dataTimeStamp = {**ItemsDict, **TimeStampDict}
-            #print(dataTimeStamp)
-            MyCursor.execute(SQLAddItemTimeStamp, dataTimeStamp)
-            mydb.commit()
-
-            MyCursor.execute(SQLGetLastIdTimeStamp)
-            TimeStampId = MyCursor.fetchall()[0][0]
+            print("TEST", i)
             data = {
                 "endOfGameResult": GameData.endOfGameResult,
                 "gameDuration": GameData.gameDuration,
@@ -338,18 +347,8 @@ def AddChampBuildToDB(matchid):
                 "playerAugment2": participant_i.playerAugment2,
                 "playerAugment3": participant_i.playerAugment3,
                 "playerAugment4": participant_i.playerAugment4,
-                "playerScore0": participant_i.playerScore0,
-                "playerScore1": participant_i.playerScore1,
-                "playerScore10": participant_i.playerScore10,
-                "playerScore11": participant_i.playerScore11,
-                "playerScore2": participant_i.playerScore2,
-                "playerScore3": participant_i.playerScore3,
-                "playerScore4": participant_i.playerScore4,
-                "playerScore5": participant_i.playerScore5,
-                "playerScore6": participant_i.playerScore6,
-                "playerScore7": participant_i.playerScore7,
-                "playerScore8": participant_i.playerScore8,
-                "playerScore9": participant_i.playerScore9,
+                "playerAugment5": participant_i.playerAugment5,
+                "playerAugment6": participant_i.playerAugment6,
                 "playerSubteamId": participant_i.playerSubteamId,
                 "profileIcon": participant_i.profileIcon,
                 "pushPings": participant_i.pushPings,
@@ -403,7 +402,7 @@ def AddChampBuildToDB(matchid):
                 "wardsPlaced": participant_i.wardsPlaced,
                 "win": participant_i.win,
 
-                
+
                 "main_rune1_id": participant_i.perks.mainRune1,
                 "main_rune2_id": participant_i.perks.mainRune2,
                 "main_rune3_id": participant_i.perks.mainRune3,
@@ -414,20 +413,24 @@ def AddChampBuildToDB(matchid):
                 "flexRune": participant_i.perks.flex,
                 "defenseRune": participant_i.perks.defense,
                 "mainStyle": participant_i.perks.mainStyle,
-                "subStyle": participant_i.perks.subStyle,
-                "TimeStampId": TimeStampId
+                "subStyle": participant_i.perks.subStyle
             }
             MyCursor.execute(SQLAddChampionBuild, data)
             mydb.commit()
+            MyCursor.execute(SQLAddItemTimeStamp, dataTimeStamp)
+            mydb.commit()
+
             #print("NOWY BUILD")
-        except:
-            #print("COS POSZLO NIE TAK")
+        except Exception as e:
+            print(e, "HALOO", i)
+            print("COS POSZLO NIE TAK")
             return
     print("END")
 
-AddChallToDB()
+#AddChallToDB()
 MyCursor.execute("SELECT puuid FROM players")
 ListaGraczyChall = MyCursor.fetchall()
+print("HALO")
 try:
     Historia = MatchHistory(ListaGraczyChall[0][0])
 except:

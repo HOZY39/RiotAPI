@@ -2,7 +2,7 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    passwd='passwd',
+    passwd='Snajper2!',
     auth_plugin='mysql_native_password',
     database="LolStats"
 )
@@ -231,18 +231,8 @@ playerAugment1 INT,
 playerAugment2 INT,
 playerAugment3 INT,
 playerAugment4 INT,
-playerScore0 INT,
-playerScore1 INT,
-playerScore10 INT,
-playerScore11 INT,
-playerScore2 INT,
-playerScore3 INT,
-playerScore4 INT,
-playerScore5 INT,
-playerScore6 INT,
-playerScore7 INT,
-playerScore8 INT,
-playerScore9 INT,
+playerAugment5 INT,
+playerAugment6 INT,
 playerSubteamId INT,
 profileIcon INT,
 pushPings INT,
@@ -308,10 +298,7 @@ offenseRune INT,
 mainStyle INT,
 subStyle INT,
 
-
-TimeStampId INT,
-FOREIGN KEY(puuid) REFERENCES players(puuid),
-FOREIGN KEY(TimeStampId) REFERENCES TimeStamps(id)
+CONSTRAINT fk_players_puuid FOREIGN KEY(puuid) REFERENCES players(puuid) ON DELETE CASCADE
 )"""
 
 # Tworzenie tablicy dla kolejnosci kupionych przedmiotow
@@ -456,7 +443,8 @@ SQLCreateTableItemTimeline = """CREATE TABLE TimeStamps (
     LevelUp15 INT,
     LevelUp16 INT,
     LevelUp17 INT,
-    LevelUp18 INT
+    LevelUp18 INT,
+    CONSTRAINT fk_champ_build_id FOREIGN KEY(id) REFERENCES champ_build(id) ON DELETE CASCADE
 );
 """
 
@@ -522,8 +510,7 @@ killingSprees, kills, lane, largestCriticalStrike, largestKillingSpree, largestM
 magicDamageDealt, magicDamageDealtToChampions, magicDamageTaken, needVisionPings, neutralMinionsKilled, nexusKills, 
 nexusLost, nexusTakedowns, objectivesStolen, objectivesStolenAssists, onMyWayPings, participantId, pentaKills, 
 physicalDamageDealt, physicalDamageDealtToChampions, physicalDamageTaken, placement, playerAugment1, playerAugment2, 
-playerAugment3, playerAugment4, playerScore0, playerScore1, playerScore10, playerScore11, playerScore2, playerScore3, 
-playerScore4, playerScore5, playerScore6, playerScore7, playerScore8, playerScore9, playerSubteamId, profileIcon, 
+ playerAugment3, playerAugment4, playerAugment5, playerAugment6,playerSubteamId, profileIcon, 
 pushPings, puuid, quadraKills, riotIdGameName, riotIdTagline, role, sightWardsBoughtInGame, spell1Casts, spell2Casts, 
 spell3Casts, spell4Casts, subteamPlacement, summoner1Casts, summoner1Id, summoner2Casts, summoner2Id, summonerId, 
 summonerLevel, summonerName, teamEarlySurrendered, teamId, teamPosition, timeCCingOthers, timePlayed, 
@@ -532,7 +519,7 @@ totalDamageTaken, totalEnemyJungleMinionsKilled, totalHeal, totalHealsOnTeammate
 totalTimeSpentDead, totalUnitsHealed, tripleKills, trueDamageDealt, trueDamageDealtToChampions, trueDamageTaken, 
 turretKills, turretTakedowns, turretsLost, unrealKills, visionClearedPings, visionScore, visionWardsBoughtInGame, 
 wardsKilled, wardsPlaced, win, main_rune1_id, main_rune2_id, main_rune3_id, main_rune4_id, side_rune1_id, side_rune2_id, 
-defenseRune, flexRune, offenseRune, mainStyle, subStyle, TimeStampId)
+defenseRune, flexRune, offenseRune, mainStyle, subStyle)
 SELECT  %(endOfGameResult)s, %(gameCreation)s, %(gameDuration)s, %(gameEndTimestamp)s, %(gameId)s, %(gameMode)s, 
 %(gameStartTimestamp)s, %(gameType)s, %(gameVersion)s, %(mapId)s, %(platformId)s, %(queueId)s, %(tournamentCode)s, 
 %(allInPings)s, %(assistMePings)s, %(assists)s, %(baronKills)s, %(basicPings)s, %(bountyLevel)s, %(12AssistStreakCount)s, 
@@ -574,9 +561,7 @@ SELECT  %(endOfGameResult)s, %(gameCreation)s, %(gameDuration)s, %(gameEndTimest
 %(magicDamageDealtToChampions)s, %(magicDamageTaken)s, %(needVisionPings)s, %(neutralMinionsKilled)s, %(nexusKills)s, 
 %(nexusLost)s, %(nexusTakedowns)s, %(objectivesStolen)s, %(objectivesStolenAssists)s, %(onMyWayPings)s, 
 %(participantId)s, %(pentaKills)s, %(physicalDamageDealt)s, %(physicalDamageDealtToChampions)s, %(physicalDamageTaken)s, 
-%(placement)s, %(playerAugment1)s, %(playerAugment2)s, %(playerAugment3)s, %(playerAugment4)s, %(playerScore0)s, 
-%(playerScore1)s, %(playerScore10)s, %(playerScore11)s, %(playerScore2)s, %(playerScore3)s, %(playerScore4)s, 
-%(playerScore5)s, %(playerScore6)s, %(playerScore7)s, %(playerScore8)s, %(playerScore9)s, %(playerSubteamId)s, 
+%(placement)s, %(playerAugment1)s, %(playerAugment2)s, %(playerAugment3)s, %(playerAugment4)s, %(playerAugment5)s, %(playerAugment6)s, %(playerSubteamId)s, 
 %(profileIcon)s, %(pushPings)s, %(puuid)s, %(quadraKills)s, %(riotIdGameName)s, %(riotIdTagline)s, %(role)s, 
 %(sightWardsBoughtInGame)s, %(spell1Casts)s, %(spell2Casts)s, %(spell3Casts)s, %(spell4Casts)s, %(subteamPlacement)s, 
 %(summoner1Casts)s, %(summoner1Id)s, %(summoner2Casts)s, %(summoner2Id)s, %(summonerId)s, %(summonerLevel)s, 
@@ -587,7 +572,7 @@ SELECT  %(endOfGameResult)s, %(gameCreation)s, %(gameDuration)s, %(gameEndTimest
 %(trueDamageDealtToChampions)s, %(trueDamageTaken)s, %(turretKills)s, %(turretTakedowns)s, %(turretsLost)s, %(unrealKills)s, 
 %(visionClearedPings)s, %(visionScore)s, %(visionWardsBoughtInGame)s, %(wardsKilled)s, %(wardsPlaced)s, %(win)s, 
 %(main_rune1_id)s, %(main_rune2_id)s, %(main_rune3_id)s, %(main_rune4_id)s, %(side_rune1_id)s, %(side_rune2_id)s, 
-%(defenseRune)s, %(flexRune)s, %(offenseRune)s, %(mainStyle)s, %(subStyle)s, %(TimeStampId)s
+%(defenseRune)s, %(flexRune)s, %(offenseRune)s, %(mainStyle)s, %(subStyle)s
 FROM dual
 WHERE NOT EXISTS (
     SELECT * FROM champ_build WHERE gameId = %(gameId)s AND summonerId = %(summonerId)s
@@ -635,21 +620,13 @@ FROM TimeStamps
 ORDER BY id DESC
 LIMIT 1"""
 
-
-
-"""
-MyCursor.execute("SELECT * FROM players WHERE id='12341234'")
-records = MyCursor.fetchall()
-print(records)
-"""
-
 #MyCursor.execute(SQLCreateTablePlayers)
+#mydb.commit()
+#MyCursor.execute(SQLCreateTableChampBuild)
 #mydb.commit()
 #MyCursor.execute(SQLCreateTableItemTimeline)
 #mydb.commit()
 #MyCursor.execute(SQLCreateTableMastery)
-#mydb.commit()
-#MyCursor.execute(SQLCreateTableChampBuild)
 #mydb.commit()
 
 

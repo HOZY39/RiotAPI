@@ -42,9 +42,7 @@ class Participants:
                  neutralMinionsKilled, nexusKills, nexusLost, nexusTakedowns, objectivesStolen,
                  objectivesStolenAssists, onMyWayPings, participantId, pentaKills, perks, physicalDamageDealt,
                  physicalDamageDealtToChampions, physicalDamageTaken, placement, playerAugment1,
-                 playerAugment2, playerAugment3, playerAugment4, playerScore0, playerScore1, playerScore10,
-                 playerScore11, playerScore2, playerScore3, playerScore4, playerScore5, playerScore6,
-                 playerScore7, playerScore8, playerScore9, playerSubteamId, profileIcon, pushPings, puuid,
+                 playerAugment2, playerAugment3, playerAugment4, playerAugment5, playerAugment6, playerSubteamId, profileIcon, pushPings, puuid,
                  quadraKills, riotIdGameName, riotIdTagline, role, sightWardsBoughtInGame, spell1Casts,
                  spell2Casts, spell3Casts, spell4Casts, subteamPlacement, summoner1Casts, summoner1Id,
                  summoner2Casts, summoner2Id, summonerId, summonerLevel, summonerName, teamEarlySurrendered,
@@ -130,18 +128,8 @@ class Participants:
         self.playerAugment2 = playerAugment2
         self.playerAugment3 = playerAugment3
         self.playerAugment4 = playerAugment4
-        self.playerScore0 = playerScore0
-        self.playerScore1 = playerScore1
-        self.playerScore10 = playerScore10
-        self.playerScore11 = playerScore11
-        self.playerScore2 = playerScore2
-        self.playerScore3 = playerScore3
-        self.playerScore4 = playerScore4
-        self.playerScore5 = playerScore5
-        self.playerScore6 = playerScore6
-        self.playerScore7 = playerScore7
-        self.playerScore8 = playerScore8
-        self.playerScore9 = playerScore9
+        self.playerAugment5 = playerAugment5
+        self.playerAugment6 = playerAugment6
         self.playerSubteamId = playerSubteamId
         self.profileIcon = profileIcon
         self.pushPings = pushPings

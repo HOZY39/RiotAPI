@@ -33,7 +33,7 @@ def AddChallToDB():
             except TypeError as e:
                 time.sleep(121)
                 Rank = RankInfo(ID[0])
-            MyCursor.execute(SQLAddUpdatePlayers, {'puuid': Player.puuid, 'name': Account['gameName'], 'accountId': Player.accountId,
+            MyCursor.execute(SQLAddUpdatePlayers, {'puuid': Player.puuid, 'name': Account["gameName"], 'accountId': Player.accountId,
             'id': Player.id, 'tag': Account['tagLine'], 'level': Player.summonerLevel, 'profile_icon': Player.profileIconId,
             'rankSolo': Rank['rank'], 'tierSolo': Rank['tier'], 'lpSolo': Rank['leaguePoints'], 'winSolo': Rank['wins'],
             'loseSolo': Rank['losses']})
